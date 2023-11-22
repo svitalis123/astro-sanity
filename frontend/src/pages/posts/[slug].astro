@@ -1,0 +1,57 @@
+---
+import {useSanityClient} from 'astro-sanity';
+import PortableText from '../../components/PortableText.astro';
+export async function getStaticPaths(){
+  const posts = await useSanityClient().fetch('*[_type == "post"]')
+
+  return posts.map(({title, body, slug}) => {
+    return {
+      params: {slug: slug.current},
+      props: {title, body}
+    }
+  })
+}
+
+const {slug} = Astro.params
+const {title, body} =  Astro.props
+---
+<main class="holder_main bg-[#000] py-[3rem]">
+  <a href="/" class="holder_main_a text-[#fff] block text-center text-[3rem] p-4 mx-auto w-full">
+    Home
+  </a>
+  <div class="holder_main_a_div max-w-[1280px] mx-auto text-[#fff] text-center">
+    <p class="text-center " >this is the {title} with
+      <PortableText portableText={body} />
+    </p>
+  </div>  
+</main>
+
+<style>
+  .holder_main {
+    background-color: #000;
+    padding: 3rem 0rem;
+  }
+
+  .holder_main_a {
+    display: block;
+    text-align: center;
+    font-size: 3rem;
+    padding: 0.5rem 1rem;
+    background-color: rgb(30, 226, 72);
+    color: #fff;
+    border-radius: 18px;
+    transition: all 0.5s ease-in-out;
+    width: min-content;
+  }
+
+  .holder_main_a:hover {
+    background-color: rgb(22, 182, 56);
+  }
+
+  .holder_main_a_div {
+    max-width: 1280px;
+    margin: auto;
+    color: #fff;
+    text-align: center;
+  }
+</style>
